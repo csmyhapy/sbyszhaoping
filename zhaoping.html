@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>湘伴忆生·团队招募</title>
+<link rel="preconnect" href="https://font.d.design">
+<link rel="stylesheet" href="https://font.d.design/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=ZCOOL+XiaoWei&display=swap">
+<script src="https://static-ddesign.oss-cn-beijing.aliyuncs.com/js/tailwindcss_3_4_17.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Noto Sans SC', sans-serif; background: #1a1a1a; }
+.swiper-container { width: 100%; height: 100%; position: relative; overflow: hidden; }
+.slide { width: 100%; height: 100%; position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease; transform: translateY(30px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 28px; overflow-y: auto; }
+.slide.active { opacity: 1; transform: translateY(0); z-index: 2; }
+.slide.prev { opacity: 0; transform: translateY(-30px); z-index: 1; }
+
+/* 导航点 */
+.nav-dots { position: fixed; right: 16px; top: 50%; transform: translateY(-50%); z-index: 100; display: flex; flex-direction: column; gap: 12px; }
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: all 0.3s ease; cursor: pointer; }
+.nav-dot.active { background: #E8A87C; transform: scale(1.4); }
+
+/* 上滑提示 */
+.scroll-hint { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; flex-direction: column; align-items: center; gap: 6px; animation: bounce 2s infinite; }
+.scroll-hint span { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 2px; }
+.scroll-arrow { width: 20px; height: 20px; border-right: 2px solid rgba(255,255,255,0.4); border-bottom: 2px solid rgba(255,255,255,0.4); transform: rotate(45deg); }
+@keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+/* 通用样式 */
+.tag { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; letter-spacing: 1px; }
+.card { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 14px; transition: transform 0.3s ease; }
+.card:active { transform: scale(0.98); }
+.divider { width: 40px; height: 3px; border-radius: 2px; margin: 16px auto; }
+
+/* Slide 1 - 封面 */
+.s1 { background: linear-gradient(160deg, #2D1B0E 0%, #4A2C17 40%, #6B3A1F 100%); text-align: center; }
+.s1 .logo-text { font-family: 'ZCOOL XiaoWei', serif; font-size: 42px; color: #E8A87C; line-height: 1.3; margin-bottom: 8px; }
+.s1 .subtitle { font-size: 16px; color: rgba(255,255,255,0.7); letter-spacing: 3px; margin-bottom: 40px; }
+.s1 .hero-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 2; max-width: 300px; margin: 0 auto; }
+.s1 .deco-circle { position: absolute; border-radius: 50%; border: 1px solid rgba(232,168,124,0.15); }
+.s1 .c1 { width: 280px; height: 280px; top: -60px; right: -80px; }
+.s1 .c2 { width: 200px; height: 200px; bottom: 80px; left: -60px; }
+
+/* Slide 2 - 我们是谁 */
+.s2 { background: linear-gradient(160deg, #1E2A1E 0%, #2A3D2A 50%, #3A5238 100%); text-align: center; }
+.s2 h2 { font-family: 'ZCOOL XiaoWei', serif; font-size: 28px; color: #A8D5BA; margin-bottom: 6px; }
+.s2 .content-box { background: rgba(255,255,255,0.06); border-radius: 20px; padding: 28px 22px; margin-top: 24px; border: 1px solid rgba(168,213,186,0.15); }
+.s2 p { font-size: 15px; color: rgba(255,255,255,0.75); line-height: 2; text-align: left; }
+.s2 .highlight { color: #A8D5BA; font-weight: 700; }
+
+/* Slide 3 - 岗位 */
+.s3 { background: linear-gradient(160deg, #1B1E2D 0%, #2A2F4A 50%, #3A406B 100%); justify-content: flex-start; padding-top: 50px; }
+.s3 h2 { font-family: 'ZCOOL XiaoWei', serif; font-size: 28px; color: #A8B5D5; margin-bottom: 20px; text-align: center; }
+.s3 .role-icon { font-size: 28px; margin-bottom: 8px; }
+.s3 .role-name { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.s3 .role-count { font-size: 12px; color: #A8B5D5; margin-bottom: 8px; }
+.s3 .role-desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+/* Slide 4 - 你能得到什么 */
+.s4 { background: linear-gradient(160deg, #2D1B26 0%, #4A2A3D 50%, #6B3A55 100%); text-align: center; }
+.s4 h2 { font-family: 'ZCOOL XiaoWei', serif; font-size: 28px; color: #D5A8C4; margin-bottom: 20px; }
+.s4 .gain-item { display: flex; align-items: flex-start; gap: 14px; text-align: left; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.s4 .gain-item:last-child { border-bottom: none; }
+.s4 .gain-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.s4 .gain-text { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.7; }
+.s4 .promise-box { margin-top: 20px; background: rgba(213,168,196,0.1); border: 1px solid rgba(213,168,196,0.2); border-radius: 14px; padding: 18px; text-align: left; }
+.s4 .promise-title { font-size: 13px; color: #D5A8C4; font-weight: 700; margin-bottom: 8px; }
+.s4 .promise-text { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.8; }
+
+/* Slide 5 - 加入我们 */
+.s5 { background: linear-gradient(160deg, #2D220E 0%, #4A3817 40%, #6B5020 100%); text-align: center; }
+.s5 h2 { font-family: 'ZCOOL XiaoWei', serif; font-size: 28px; color: #E8D5A8; margin-bottom: 24px; }
+.s5 .cta-box { background: rgba(232,213,168,0.1); border: 1px solid rgba(232,213,168,0.25); border-radius: 20px; padding: 30px 24px; margin-bottom: 24px; }
+.s5 .cta-step { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 2.2; }
+.s5 .cta-highlight { color: #E8D5A8; font-weight: 700; font-size: 16px; }
+.s5 .deadline { display: inline-block; margin-top: 16px; padding: 8px 24px; background: rgba(232,213,168,0.15); border-radius: 30px; font-size: 14px; color: #E8D5A8; letter-spacing: 1px; }
+.s5 .slogan { font-family: 'ZCOOL XiaoWei', serif; font-size: 18px; color: rgba(255,255,255,0.5); margin-top: 30px; letter-spacing: 3px; }
+</style>
+</head>
+<body>
+
+<div class="swiper-container" id="swiper">
+  <!-- Slide 1: 封面 -->
+  <div class="slide s1 active" data-index="0">
+    <div class="deco-circle c1"></div>
+    <div class="deco-circle c2"></div>
+    <div style="margin-bottom: 20px;">
+      <span class="tag" style="background: rgba(232,168,124,0.2); color: #E8A87C;">湖南女子学院 · 创业项目</span>
+    </div>
+    <div class="logo-text">湘伴忆生</div>
+    <div class="subtitle">团 队 招 募</div>
+    <div class="divider" style="background: #E8A87C;"></div>
+    <p class="hero-desc">为在外打拼的湖南子女<br>帮父母留存可查阅的人生档案</p>
+    <p style="font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 30px; letter-spacing: 1px;">第三届「金种子杯」大学生创业大赛参赛项目</p>
+  </div>
+
+  <!-- Slide 2: 我们是谁 -->
+  <div class="slide s2" data-index="1">
+    <h2>我们是谁</h2>
+    <div class="divider" style="background: #A8D5BA;"></div>
+    <div class="content-box">
+      <p><span class="highlight">「湘伴忆生」</span>是湖南女子学院学生创业项目，专为在外打拼的湖南子女，帮父母留存可查阅的<span class="highlight">人生档案</span>。</p>
+      <p style="margin-top: 16px;">目前产品已进入初级验证阶段，即将参加第三届<span class="highlight">「金种子杯」</span>大学生创业大赛，并申请入驻学校产教融合基地。</p>
+    </div>
+    <p style="font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 20px; letter-spacing: 1px;">用温度记录岁月</p>
+  </div>
+
+  <!-- Slide 3: 我们找谁 -->
+  <div class="slide s3" data-index="2">
+    <h2>我们找谁</h2>
+    <div class="divider" style="background: #A8B5D5; margin-bottom: 20px;"></div>
+
+    <div class="card" data-name="访谈组卡片">
+      <div class="role-icon">🎙️</div>
+      <div class="role-name">访谈组</div>
+      <div class="role-count">招募 2-3 人</div>
+      <div class="role-desc">上门访谈老人、采集故事<br>沟通能力强、有耐心，湖南本地人优先</div>
+    </div>
+
+    <div class="card" data-name="整理组卡片">
+      <div class="role-icon">📝</div>
+      <div class="role-name">整理组</div>
+      <div class="role-count">招募 2-3 人</div>
+      <div class="role-desc">整理照片、文字、音频并归档<br>细心、有文字功底</div>
+    </div>
+
+    <div class="card" data-name="技术组卡片">
+      <div class="role-icon">💻</div>
+      <div class="role-name">技术组</div>
+      <div class="role-count">招募 1-2 人</div>
+      <div class="role-desc">维护网页、处理音视频、调试 AI 工具<br>对技术有兴趣、愿意学习</div>
+    </div>
+
+    <div class="card" data-name="运营组卡片">
+      <div class="role-icon">📣</div>
+      <div class="role-name">运营组</div>
+      <div class="role-count">招募 1-2 人</div>
+      <div class="role-desc">对接客户、回访、新媒体运营<br>会沟通、有运营意识</div>
+    </div>
+  </div>
+
+  <!-- Slide 4: 你能得到什么 -->
+  <div class="slide s4" data-index="3">
+    <h2>你能得到什么</h2>
+    <div class="divider" style="background: #D5A8C4;"></div>
+    <div style="margin-top: 16px; width: 100%;">
+      <div class="gain-item" data-name="创业经验">
+        <div class="gain-icon">🚀</div>
+        <div class="gain-text">真实创业经验，不是纸上谈兵</div>
+      </div>
+      <div class="gain-item" data-name="参赛机会">
+        <div class="gain-icon">🏆</div>
+        <div class="gain-text">金种子杯参赛机会 + 产教融合基地入驻资格</div>
+      </div>
+      <div class="gain-item" data-name="收入分配">
+        <div class="gain-icon">💰</div>
+        <div class="gain-text">项目收入分配，做多少得多少</div>
+      </div>
+      <div class="gain-item" data-name="导师指导">
+        <div class="gain-icon">👩‍🏫</div>
+        <div class="gain-text">20 年教龄 + 企业咨询经验的戴老师亲自指导</div>
+      </div>
+    </div>
+    <div class="promise-box" data-name="承诺说明">
+      <div class="promise-title">我们的承诺</div>
+      <div class="promise-text">不承诺一夜暴富、轻松躺赚、一定拿奖<br>承诺：真实项目不纸上谈兵、有人带不放养、做多少得多少</div>
+    </div>
+  </div>
+
+  <!-- Slide 5: 怎么加入 -->
+  <div class="slide s5" data-index="4">
+    <h2>怎么加入</h2>
+    <div class="divider" style="background: #E8D5A8;"></div>
+    <div class="cta-box" data-name="报名方式">
+      <p class="cta-step">第一步：添加戴老师微信</p>
+      <p class="cta-step cta-highlight" style="margin: 12px 0;">发送「姓名 + 专业 + 意向岗位」</p>
+      <p class="cta-step">即可完成报名</p>
+    </div>
+    <div class="deadline" data-name="截止时间">⏰ 截止时间：2026 年 10 月 15 日</div>
+    <p class="slogan">期待与你一起，用温度记录岁月</p>
+  </div>
+</div>
+
+<!-- 导航点 -->
+<div class="nav-dots" id="navDots">
+  <div class="nav-dot active" data-target="0"></div>
+  <div class="nav-dot" data-target="1"></div>
+  <div class="nav-dot" data-target="2"></div>
+  <div class="nav-dot" data-target="3"></div>
+  <div class="nav-dot" data-target="4"></div>
+</div>
+
+<!-- 上滑提示 -->
+<div class="scroll-hint" id="scrollHint">
+  <span>上滑查看</span>
+  <div class="scroll-arrow"></div>
+</div>
+
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.nav-dot');
+  const scrollHint = document.getElementById('scrollHint');
+  let currentIndex = 0;
+  let isAnimating = false;
+  const totalSlides = slides.length;
+
+  function goTo(index) {
+    if (isAnimating || index === currentIndex || index < 0 || index >= totalSlides) return;
+    isAnimating = true;
+
+    slides[currentIndex].classList.remove('active');
+    slides[currentIndex].classList.add(index > currentIndex ? 'prev' : '');
+    
+    slides[index].classList.remove('prev');
+    slides[index].classList.add('active');
+
+    dots.forEach(d => d.classList.remove('active'));
+    dots[index].classList.add('active');
+
+    currentIndex = index;
+
+    // 最后一页隐藏上滑提示
+    scrollHint.style.opacity = currentIndex === totalSlides - 1 ? '0' : '1';
+
+    setTimeout(() => {
+      slides.forEach((s, i) => {
+        if (i !== currentIndex) {
+          s.classList.remove('active', 'prev');
+        }
+      });
+      isAnimating = false;
+    }, 600);
+  }
+
+  // 触摸滑动
+  let startY = 0;
+  let startX = 0;
+  document.addEventListener('touchstart', e => {
+    startY = e.touches[0].clientY;
+    startX = e.touches[0].clientX;
+  }, { passive: true });
+
+  document.addEventListener('touchend', e => {
+    const deltaY = startY - e.changedTouches[0].clientY;
+    const deltaX = Math.abs(startX - e.changedTouches[0].clientX);
+    if (Math.abs(deltaY) > 50 && deltaX < 80) {
+      if (deltaY > 0) goTo(currentIndex + 1);
+      else goTo(currentIndex - 1);
+    }
+  }, { passive: true });
+
+  // 鼠标滚轮
+  document.addEventListener('wheel', e => {
+    if (e.deltaY > 0) goTo(currentIndex + 1);
+    else goTo(currentIndex - 1);
+  }, { passive: true });
+
+  // 键盘
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === ' ') goTo(currentIndex + 1);
+    if (e.key === 'ArrowUp') goTo(currentIndex - 1);
+  });
+
+  // 点击导航点
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      goTo(parseInt(dot.dataset.target));
+    });
+  });
+})();
+</script>
+</body>
+</html>
